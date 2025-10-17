@@ -30,6 +30,7 @@
         "3vl": "^1.0.1",
         "cmdk-sv": "^0.0.19",
         "custom_digitaljs": "./custom_digitaljs",
+        "gh-pages": "^6.3.0",
         "logic-web-app": "file:",
         "mkdirp": "^3.0.1",
         "svelvet": "^11.0.5",

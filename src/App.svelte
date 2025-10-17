@@ -65,7 +65,7 @@
         // loadCircuit((newData: Devices) => setDeviceData(newData))
         // loadCircuit((newData: Devices) => (currentDevicesData = newData))
         initialScale = parseFloat(localStorage.getItem('canvasZoom') || '1')
-        initialTranslation = JSON.parse(localStorage.getItem('canvasTranslation') || '{"x":0,"y":0"}')
+        initialTranslation = JSON.parse(localStorage.getItem('canvasTranslation') || '{"x":0,"y":0}')
 
         loadCircuit() // load circuit from LS into CircuitStore,
         currentDevicesData = $CircuitStore.devices
