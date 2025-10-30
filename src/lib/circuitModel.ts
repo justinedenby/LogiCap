@@ -62,6 +62,8 @@ export type AllNodePropsWithoutId =
 export type AllNodeProps = AllNodePropsWithoutId & Record<'nodeId', string>
 
 // This maybe should be just a json file but I want it to be in this folder and that is maybe problematic
+
+//this is the labeling for the front page
 export const menuJsonData: menuJsonType = {
     'Logic Gates': {
         svg: undefined,
