@@ -38,7 +38,33 @@ type LogicGate = {
     rotation?: number
 }
 
-type Device = Button | Lamp | LogicGate
+// NEW: Clock type for clock components
+type Clock = {
+    type: "Clock"
+    label: string
+    frequency: number
+    position?: {
+        x: number
+        y: number
+    },
+    rotation?: number
+}
+
+// NEW: DFlipFlop type for D flip-flop components
+type DFlipFlop = {
+    type: "Dff"  // DigitalJS uses "Dff" as the type name
+    label: string
+    bits: number
+    trigger: 'rising' | 'falling'
+    position?: {
+        x: number
+        y: number
+    },
+    rotation?: number
+}
+
+// UPDATE: Add Clock and DFlipFlop to the Device union type
+type Device = Button | Lamp | LogicGate | Clock | DFlipFlop
 type Devices = Record<string, Device>
 
 // DIGITALJS link node connection types

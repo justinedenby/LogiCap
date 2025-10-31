@@ -1,4 +1,4 @@
-<!-- https://coolorgS.co/palette/9b5de5-f15bb5-fee440-00bbf9-00f5d4 -->
+<!-- https://coolorgS.co/palette/9b5de5-f15bb5-fee440-00bbf9-00f5d4 --> 
 <script module>
     export function onWireConnection(wireId: string) {
         console.log('Success new connection made id: ' + wireId)
@@ -20,8 +20,8 @@
 
     import { CircuitStore, loadCircuit, saveCircuit } from '@CircuitStore'
 
-    import type { logicGateTypes } from '@CircuitModel'
-
+    import type { logicGateTypes, allNodeTypes } from '@CircuitModel'
+    
     import SideMenu from '@AppComponents/SideMenu/SideMenu.svelte'
 
     // I could call this 'generic' circuit or something
@@ -100,24 +100,49 @@
     // sync the devices list with the currentDevicesData variable.
 
     // called on "drop" in sidemenugroupitem.svelte
+    // function createCanvasDevice(e: MouseEvent & { gateType: string }) {
+    //     const gateType: allNodeTypes = e.gateType as allNodeTypes
+    //     // changing this to accept more than just logic gates
+
+
+    //     // this gate will update the store and then the subscribe will update the
+    //     // list of circuits currently active on the screen
+
+    //     // saves state to local storage on node add.
+    //     const uuid = generateNonce()
+
+    //     // create new gate on global circuit store on drop
+    //     const newDeviceList = CircuitStore.addCircuitDevice(
+    //         gateType,
+    //         uuid
+    //     ) as Devices
+    //     currentDevicesData = newDeviceList
+
+    //     // save on every addition of a new node.
+    //     saveCircuit()
+    // }
     function createCanvasDevice(e: MouseEvent & { gateType: string }) {
-        const gateType: logicGateTypes = e.gateType as logicGateTypes
-        // this gate will update the store and then the subscribe will update the
-        // list of circuits currently active on the screen
+    const gateType: allNodeTypes = e.gateType as allNodeTypes
+    
+    console.log('🔄 Creating device:', gateType);
+    
+    const uuid = generateNonce()
+    console.log('📝 Generated UUID:', uuid);
 
-        // saves state to local storage on node add.
-        const uuid = generateNonce()
+    // create new gate on global circuit store on drop
+    const newDeviceList = CircuitStore.addCircuitDevice(
+        gateType,
+        uuid
+    ) as Devices
+    
+    console.log('💾 New device list:', newDeviceList);
+    console.log('🎯 Created device:', newDeviceList[`${gateType}_${uuid}`]);
+    
+    currentDevicesData = newDeviceList
 
-        // create new gate on global circuit store on drop
-        const newDeviceList = CircuitStore.addCircuitDevice(
-            gateType,
-            uuid
-        ) as Devices
-        currentDevicesData = newDeviceList
-
-        // save on every addition of a new node.
-        saveCircuit()
-    }
+    // save on every addition of a new node.
+    saveCircuit()
+}
     // fitView={true}
 
     let setDevices = (d: Devices) => (currentDevicesData = d)
@@ -150,7 +175,7 @@
         <ThemeToggle main="LogiCap" corner="NW" alt="LogiCap" slot="toggle" />
         {#each Object.entries(currentDevicesData) as [nodeId, device] (nodeId)}
             <Circuit
-                gateType={device.type as logicGateTypes}
+                gateType={device.type as allNodeTypes}
                 position={device.position}
                 {nodeId}
                 nodeProps={{

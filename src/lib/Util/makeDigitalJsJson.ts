@@ -82,6 +82,57 @@ function makeLogicNode(
     }
 }
 
+// NEW: Clock factory function
+function makeClock(
+    nodeName: string,
+    options?: {
+        frequency?: number
+        position?: { x: number; y: number }
+        rotation?: number
+    }
+): Clock {
+    return {
+        type: 'Clock', // DigitalJS has native Clock type!
+        label: nodeName,
+        frequency: options?.frequency || 1,
+        ...(options?.position && {
+            position: {
+                x: options.position.x,
+                y: options.position.y,
+            },
+        }),
+        ...(options?.rotation && {
+            rotation: options.rotation
+        }),
+    }
+}
+
+// NEW: D Flip-Flop factory function
+function makeDFlipFlop(
+    nodeName: string,
+    options?: {
+        position?: { x: number; y: number }
+        rotation?: number
+        bits?: number
+        trigger?: 'rising' | 'falling'
+    }
+): DFlipFlop {
+    return {
+        type: 'Dff', // DigitalJS uses 'Dff' (exact spelling)
+        label: nodeName,
+        bits: options?.bits || 1,
+        trigger: options?.trigger || 'rising',
+        ...(options?.position && {
+            position: {
+                x: options.position.x,
+                y: options.position.y,
+            },
+        }),
+        ...(options?.rotation && {
+            rotation: options.rotation
+        }),
+    }
+}
 export const deviceJsonFactoryMap: Record<
     string,
     (nodeName: string, options?: any) => Device
@@ -104,6 +155,8 @@ export const deviceJsonFactoryMap: Record<
         makeLogicNode('Not', nodeName, ...(options ? [options] : [])),
     Repeater: (nodeName, options?) =>
         makeLogicNode('Repeater', nodeName, ...(options ? [options] : [])),
+    Clock: makeClock,
+    DFlipFlop: makeDFlipFlop,
 }
 
 // // Example usage

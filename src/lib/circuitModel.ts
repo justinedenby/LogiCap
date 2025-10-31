@@ -12,22 +12,32 @@ import notIcon from '@icons/circuits/Not.webp'
 import outputIcon from '@icons/circuits/outputIcon.png'
 import inputIcon from '@icons/circuits/inputIcon.png'
 
+// Import new icons (you'll need to create these)
+import clockIcon from '@icons/circuits/Clock.webp'
+import dffIcon from '@icons/circuits/DFlipFlop.webp'
+
 import LogicGate from '@Circuits/LogicGates/LogicGate.svelte'
 import SingleIoLogic from '@Circuits/LogicGates/SingleIoLogic.svelte'
 import Lamp from '@Circuits/InputOutputNodes/Lamp.svelte'
 import ButtonNode from '@Circuits/InputOutputNodes/ButtonNode.svelte'
 
+// Import new components (you'll create these)
+import Clock from '@Circuits/Clock/Clock.svelte'
+import DFlipFlop from '@Circuits/FlipFlops/DFlipFlop.svelte'
+
 // Types that represent the different groups
 // as well as each node group based off of if they are handled in the same file.
 // or their grouping in the menu
-export type NodeMenuGroups = 'Logic Gates' | 'Input/Output' | 'GhostElement'
+export type NodeMenuGroups = 'Logic Gates' | 'Input/Output' | 'Sequential Logic' | 'GhostElement'
 
 export type dualInputLogicTypes = 'And' | 'Nand' | 'Or' | 'Nor' | 'Xor' | 'Xnor'
 export type singleIoLogicTypes = 'Repeater' | 'Not'
 export type logicGateTypes = singleIoLogicTypes | dualInputLogicTypes
 
 export type ioNodeTypes = 'Button' | 'Lamp'
-export type allNodeTypes = logicGateTypes | ioNodeTypes
+export type clockTypes = 'Clock'
+export type sequentialTypes = 'DFlipFlop' | 'TFlipFlop' | 'JKFlipFlop' | 'Register'
+export type allNodeTypes = logicGateTypes | ioNodeTypes | clockTypes | sequentialTypes
 
 // types for the structure of the menu
 // this object is also used when dragging and dropping from SideMenuGroupItems.svelte
@@ -45,6 +55,8 @@ export type menuJsonType = Record<NodeMenuGroups, menuJsonItem>
 type LogicGateProps = ComponentProps<typeof LogicGate>
 type OutputResultNodeProps = ComponentProps<typeof Lamp>
 type ButtonInputNodeProps = ComponentProps<typeof ButtonNode>
+type ClockProps = ComponentProps<typeof Clock>
+type DFlipFlopProps = ComponentProps<typeof DFlipFlop>
 
 // needed in SimNode.svelte
 // So far we don't need to worry about initializing SimNode, with specific props.
@@ -57,6 +69,8 @@ export type AllNodePropsWithoutId =
     | Omit<LogicGateProps, 'nodeId'>
     | Omit<OutputResultNodeProps, 'nodeId'>
     | Omit<ButtonInputNodeProps, 'nodeId'>
+    | Omit<ClockProps, 'nodeId'>
+    | Omit<DFlipFlopProps, 'nodeId'>
 
 // add back in nodeId
 export type AllNodeProps = AllNodePropsWithoutId & Record<'nodeId', string>
@@ -83,6 +97,17 @@ export const menuJsonData: menuJsonType = {
         groupElements: [
             { name: 'Lamp', nodeType: 'Lamp', icon: outputIcon },
             { name: 'Button', nodeType: 'Button', icon: inputIcon },
+        ],
+    },
+    'Sequential Logic': {
+        svg: undefined,
+        groupElements: [
+            { name: 'Clock', nodeType: 'Clock', icon: clockIcon },
+            { name: 'D Flip-Flop', nodeType: 'DFlipFlop', icon: dffIcon },
+            // You can add more sequential components later:
+            // { name: 'T Flip-Flop', nodeType: 'TFlipFlop', icon: tffIcon },
+            // { name: 'JK Flip-Flop', nodeType: 'JKFlipFlop', icon: jkffIcon },
+            // { name: 'Register', nodeType: 'Register', icon: registerIcon },
         ],
     },
     GhostElement: {
@@ -117,6 +142,13 @@ export function getComponent(type: allNodeTypes) {
             return ButtonNode
         case 'Lamp':
             return Lamp
+        case 'Clock':
+            return Clock
+        case 'DFlipFlop':
+        case 'TFlipFlop':
+        case 'JKFlipFlop':
+        case 'Register':
+            return DFlipFlop // Start with DFF, create separate components later
         default:
             return null
     }
